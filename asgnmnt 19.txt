@@ -1,0 +1,45 @@
+a.Visualize the correlation between all variables in a meaningful and clear way of representing. Find out
+top 3 reasons for having more crime in a city.
+Ans: Analyze if number of vacant and occupied houses and the period of time the houses were vacant had contributed to any significant change in violent and non-violent crime rates in communities.
+egression analysis is limited to the following Predictor and Response variables Predictor variables : HousVacant,PctHousOccup,PctHousOwnOcc,PctVacantBoarded,PctVacMore6Mos, PctUnemployed,PctEmploy Response Variables : ViolentCrimesPerPop.
+rom a large list of attributes, only eighteen attributes are chosen for Exploratory Data Analysis. The chosen attributes are namely state, HousVacant,PctHouseOccup,PctHousOwnOcc,PctVacantBoarded.
+
+census <- read.csv(file.choose())
+View(census)  
+      names(census)  
+      head(census)  
+      summary(census)  
+      fix(census)  
+census$rent
+      census$region
+
+
+b. What is the difference between co-variance and correlation? Take an example from this dataset and
+show the differences if any?
+The problem with covariances is that they are hard to compare: when you calculate the covariance of a set of heights and weights, as expressed in (respectively) meters and kilograms, you will get a different covariance from when you do it in other units (which already gives a problem for people doing the same thing with or without the metric system!), but also, it will be hard to tell if (e.g.) height and weight 'covariate better' than, e.g. the length of your toes and fingers, simply because the 'scale' you calculate the covariance on is different.
+
+The solution to this is to 'normalize' the covariance: you divide the covariance by something that represents the diversity and scale in both the covariates, and end up with a value that is assured to be between -1 and 1: the correlation. Whatever unit your original variables were in, you will always get the same result, and this will also ensure that you can, to a certain degree, compare whether two variables 'correlate' more than two others, simply by comparing their correlation.
+R1 <- structure(c(1, 0.86, 0.56, 0.32, 0.85, 0.86, 1, 0.01, 0.74, 0.32, 
+                  0.56, 0.01, 1, 0.65, 0.91, 0.32, 0.74, 0.65, 1, 0.36,
+                  0.85, 0.32, 0.91, 0.36, 1), 
+                .Dim = c(5L, 5L))
+colnames(R1) <- rownames(R1) <- paste0("x", 1:ncol(R1))
+R1
+
+findCorrelation(R1, cutoff = .6, exact = FALSE)
+findCorrelation(R1, cutoff = .6, exact = TRUE)
+findCorrelation(R1, cutoff = .6, exact = TRUE, names = FALSE)
+
+
+R2 <- diag(rep(1, 5))
+R2[2, 3] <- R2[3, 2] <- .7
+R2[5, 3] <- R2[3, 5] <- -.7
+R2[4, 1] <- R2[1, 4] <- -.67
+
+corrDF <- expand.grid(row = 1:5, col = 1:5)
+corrDF$correlation <- as.vector(R2)
+levelplot(correlation ~ row + col, corrDF)
+
+findCorrelation(R2, cutoff = .65, verbose = TRUE)
+
+findCorrelation(R2, cutoff = .99, verbose = TRUE)
